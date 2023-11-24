@@ -1,0 +1,24 @@
+﻿namespace Vilcu_Ana_Lab7;
+
+public partial class MainPage : ContentPage
+{
+	int count = 0;
+
+	public MainPage()
+	{
+		InitializeComponent();
+	}
+
+	private void OnCounterClicked(object sender, EventArgs e)
+	{
+		count++;
+
+		if (count == 1)
+			CounterBtn.Text = $"High fived {count} time";
+		else
+			CounterBtn.Text = $"High fived {count} times";
+
+		SemanticScreenReader.Announce(CounterBtn.Text);
+	}
+}
+
