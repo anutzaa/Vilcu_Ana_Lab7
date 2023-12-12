@@ -19,6 +19,13 @@ namespace Vilcu_Ana_Lab7.Data
             _database.CreateTableAsync<ShopList>().Wait();
             _database.CreateTableAsync<Product>().Wait();
             _database.CreateTableAsync<ListProduct>().Wait();
+            _database.CreateTableAsync<Shop>().Wait();
+        }
+
+        //PRODUCT
+        public Task<List<Product>> GetProductsAsync()
+        {
+            return _database.Table<Product>().ToListAsync();
         }
 
         public Task<int> SaveProductAsync(Product product)
@@ -38,6 +45,15 @@ namespace Vilcu_Ana_Lab7.Data
             return _database.DeleteAsync(product);
         }
 
+        public Task<Product> GetProductAsync(int productId)
+        {
+            return _database.Table<Product>()
+                .Where(p => p.ID == productId)
+                .FirstOrDefaultAsync();
+        }
+
+
+        //PRODUCT LIST
         public Task<int> SaveListProductAsync(ListProduct listp)
         {
             if (listp.ID != 0)
@@ -49,6 +65,7 @@ namespace Vilcu_Ana_Lab7.Data
                 return _database.InsertAsync(listp);
             }
         }
+
         public Task<List<Product>> GetListProductsAsync(int shoplistid)
         {
             return _database.QueryAsync<Product>(
@@ -57,7 +74,6 @@ namespace Vilcu_Ana_Lab7.Data
             + " on P.ID = LP.ProductID where LP.ShopListID = ?",
             shoplistid);
         }
-
         public Task<ListProduct> GetListProductAsync(int shopListID, int productID)
         {
             return _database.Table<ListProduct>()
@@ -70,18 +86,13 @@ namespace Vilcu_Ana_Lab7.Data
             return _database.DeleteAsync<ListProduct>(listProductID);
         }
 
-        public Task<List<Product>> GetProductsAsync()
+        public Task<int> DeleteProductListAsync(int listProductID)
         {
-            return _database.Table<Product>().ToListAsync();
+            return _database.DeleteAsync(new ListProduct { ID = listProductID });
         }
 
-        public Task<Product> GetProductAsync(int productId)
-        {
-            return _database.Table<Product>()
-                .Where(p => p.ID == productId)
-                .FirstOrDefaultAsync();
-        }
 
+        //SHOP LIST
         public Task<List<ShopList>> GetShopListsAsync()
         {
             return _database.Table<ShopList>().ToListAsync();
@@ -111,11 +122,27 @@ namespace Vilcu_Ana_Lab7.Data
             return _database.DeleteAsync(slist);
         }
 
-        public Task<int> DeleteProductListAsync(int listProductID)
+        //SHOP
+        public Task<List<Shop>> GetShopsAsync()
         {
-            return _database.DeleteAsync(new ListProduct { ID = listProductID });
+            return _database.Table<Shop>().ToListAsync();
         }
 
+        public Task<int> SaveShopAsync(Shop shop)
+        {
+            if (shop.ID != 0)
+            {
+                return _database.UpdateAsync(shop);
+            }
+            else
+            {
+                return _database.InsertAsync(shop);
+            }
+        }
 
+        public Task<int> DeleteShopAsync(Shop shop)
+        {
+            return _database.DeleteAsync(shop);
+        }
     }
 }
